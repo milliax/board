@@ -1,10 +1,15 @@
 "use client"
 
 import clsx from "clsx";
-import { useState } from "react";
+import React, { useState } from "react";
 
-import { SlOptionsVertical } from "react-icons/sl";
+import { SlControlStart, SlOptionsVertical } from "react-icons/sl";
 import { MdDragIndicator } from "react-icons/md";
+
+import {
+    motion,
+    useDragControls,
+} from "framer-motion"
 
 export default function Tasks() {
     return (
@@ -33,6 +38,20 @@ function Task({
     task: { title: string, id: string }[],
     color: 'purple'
 }) {
+    const controls = useDragControls()
+
+    const startDrag = (event: React.PointerEvent<HTMLDivElement>) => {
+        controls.start(event, { snapToCursor: true })
+    }
+
+    const dragEnd = (event: PointerEvent | MouseEvent | TouchEvent) => {
+
+    }
+
+    const dragStart = (event: PointerEvent | MouseEvent | TouchEvent) => {
+
+    }
+
     return (
         <div className="bg-slate-200 rounded-md">
             <div className={clsx(colorPreset[color]['header'], "h-10 px-3 items-center flex flex-row justify-between rounded-t-md font-semibold")}>
@@ -42,10 +61,18 @@ function Task({
                 </div>
             </div>
             {task.map(t => (
-                <div key={t.id} className="flex flex-row pl-5 items-center py-1 space-x-2">
-                    <MdDragIndicator className=""/>
+                <motion.div key={t.id}
+                    className="flex flex-row pl-5 items-center py-1 space-x-2 select-none"
+                    // onPointerDown={(event) => { startDrag(event) }}
+                    // drag="x"
+                    style={{ touchAction: "none" }}
+                    draggable
+                    onDragEnd={(event) => { dragEnd(event) }}
+                    onDragStart={(event) => { dragStart(event) }}
+                >
+                    <MdDragIndicator className="" />
                     <h3 className="">{t.title}</h3>
-                </div>
+                </motion.div>
             ))}
         </div>
     )
